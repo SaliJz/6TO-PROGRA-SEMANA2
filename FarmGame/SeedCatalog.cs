@@ -11,7 +11,8 @@ namespace FarmGame
     /// </summary>
     internal class SeedCatalog
     {
-        //  Tabla de semillas
+        #region Tabla de Semillas
+
         // Nombre | Costo | Tiempo de crecimiento | Precio de venta | Tiempo de demora de venta
         public static readonly IReadOnlyList<SeedDefinition> All =
             new List<SeedDefinition>
@@ -68,6 +69,10 @@ namespace FarmGame
                 }
             };
 
+        #endregion
+
+        #region Métodos de búsqueda
+
         // Busca una semilla por nombre.
         public static SeedDefinition GetByName(string name)
         {
@@ -81,5 +86,7 @@ namespace FarmGame
             int idx = oneBased - 1;
             return (idx >= 0 && idx < All.Count) ? All[idx] : null;
         }
+
+        #endregion
     }
 }
