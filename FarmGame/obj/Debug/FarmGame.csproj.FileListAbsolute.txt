@@ -1,0 +1,7 @@
+C:\Users\NITRO\source\repos\FarmGame\FarmGame\bin\Debug\FarmGame.exe.config
+C:\Users\NITRO\source\repos\FarmGame\FarmGame\bin\Debug\FarmGame.exe
+C:\Users\NITRO\source\repos\FarmGame\FarmGame\bin\Debug\FarmGame.pdb
+C:\Users\NITRO\source\repos\FarmGame\FarmGame\obj\Debug\FarmGame.csproj.AssemblyReference.cache
+C:\Users\NITRO\source\repos\FarmGame\FarmGame\obj\Debug\FarmGame.csproj.CoreCompileInputs.cache
+C:\Users\NITRO\source\repos\FarmGame\FarmGame\obj\Debug\FarmGame.exe
+C:\Users\NITRO\source\repos\FarmGame\FarmGame\obj\Debug\FarmGame.pdb
