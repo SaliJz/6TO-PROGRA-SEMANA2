@@ -64,7 +64,7 @@ namespace FarmGame
             {
                 if (plot.IsReady)
                 {
-                    events.Add($"  Parcela #{plot.Id} ({plot.Seed.Name}) esta lista para cosechar.");
+                    events.Add($"Parcela #{plot.Id} ({plot.Seed.Name}) esta lista para cosechar.");
                 }
             }
 

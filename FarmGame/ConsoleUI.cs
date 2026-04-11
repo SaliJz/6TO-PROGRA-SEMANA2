@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FarmGame
@@ -39,10 +40,12 @@ namespace FarmGame
         public void Run()
         {
             Console.OutputEncoding = Encoding.UTF8;
+            Console.CursorVisible = false;
+
             ShowTitle();
+
             player = AskForPlayerName();
-            ShowMessage($"\nBienvenido, {player.Name}! Tu granja te espera.", ConsoleColor.Green);
-            Pause();
+            ShowStory();
             GameLoop();
         }
 
@@ -88,7 +91,39 @@ namespace FarmGame
                 "        > JUEGO DE GRANJA <          ",
                 "====================================="
             });
+
+            Pause();
+        }
+
+        private void ShowStory()
+        {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            TypeWrite("Hace mucho tiempo, las tierras del reino florecian con abundancia...", skippable: true);
+            TypeWrite("Pero una gran sequia lo devasto todo. Los campos quedaron en silencio.", skippable: true);
+            TypeWrite("Los mercaderes huyeron. Los graneros, vacios.", skippable: true);
+
             Console.WriteLine();
+
+            TypeWrite("Ahora, una sola persona se niega a rendirse.", skippable: true);
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            TypeWrite($"{player.Name} toma una semilla entre sus manos...", skippable: true);
+            TypeWrite($"Y decide que este reino volvera a vivir.", skippable: true);
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            TypeWrite($"Bienvenido, {player.Name}! Tu granja te espera.", skippable: true);
+
+            Console.WriteLine();
+            Console.ResetColor();
+
+            while (Console.KeyAvailable) Console.ReadKey(true);
+            Pause();
         }
 
         private void ShowHeader()
@@ -129,7 +164,7 @@ namespace FarmGame
         #endregion
 
         #region Menú principal
-        
+
         private int ShowMainMenu()
         {
             WriteColor(ConsoleColor.White, "¿Que deseas hacer hoy?");
@@ -305,7 +340,6 @@ namespace FarmGame
             }
 
             Console.WriteLine("Cosecha disponible:");
-
             var cropList = player.HarvestInventory.ToList();
             for (int i = 0; i < cropList.Count; i++)
             {
@@ -317,7 +351,6 @@ namespace FarmGame
             }
 
             Console.WriteLine();
-
             WriteColor(ConsoleColor.DarkGray, "[0] Volver");
             int choice = ReadInt("Elegir cultivo: ", 0, cropList.Count);
             if (choice == 0) return;
@@ -346,7 +379,7 @@ namespace FarmGame
             {
                 foreach (var kv in player.SeedInventory)
                 {
-                    Console.WriteLine($"    {kv.Key,-15} x{kv.Value}");
+                    Console.WriteLine($"{kv.Key,-15} x{kv.Value}");
                 }
             }
 
@@ -419,7 +452,7 @@ namespace FarmGame
         #endregion
 
         #region Fin de turno y salida
-        
+
         private void DoEndTurn()
         {
             Console.Clear();
@@ -447,17 +480,42 @@ namespace FarmGame
 
         private void DoQuit()
         {
+            ShowEnding();
+
+            string again = ReadString("¿Jugar de nuevo? (s/n): ");
+            if (again.Trim().ToLower() == "s") Run();
+        }
+
+        private void ShowEnding()
+        {
             Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            TypeWrite("El sol se pone sobre los campos de tu granja...", skippable: true);
+            TypeWrite("Lo que una vez fue tierra esteril, ahora florece.", skippable: true);
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            TypeWrite($"{player.Name} guarda sus herramientas y contempla su obra.", skippable: true);
+
+            Console.WriteLine();
+            Console.ResetColor();
+
             WriteColor(ConsoleColor.Yellow, new[]
             {
                 "=============================",
                 "     ¡Gracias por jugar!     ",
                 "============================="
             });
-            Console.WriteLine($"\n{player.Name} termino la partida en el Dia {player.Day}.");
-            Console.WriteLine($"Oro final: {player.Gold}g");
-            Console.WriteLine($"Parcelas totales: {player.TotalPlots}");
+
+            Console.WriteLine($"\nGranjero : {player.Name}");
+            Console.WriteLine($"Dias jugados : {player.Day - 1}");
+            Console.WriteLine($"Oro final : {player.Gold}g");
+            Console.WriteLine($"Parcelas : {player.TotalPlots}");
             Console.WriteLine();
+
+            while (Console.KeyAvailable) Console.ReadKey(true);
         }
 
         #endregion
@@ -466,6 +524,11 @@ namespace FarmGame
 
         private Player AskForPlayerName()
         {
+            Console.Clear();
+            WriteColor(ConsoleColor.Yellow, new[]
+            {
+                "===> CREACION DE PERSONAJE <===\n"
+            });
             Console.WriteLine();
             WriteColor(ConsoleColor.White, "Ingresa el nombre de tu granjero: ");
             Console.Write("> ");
@@ -477,6 +540,23 @@ namespace FarmGame
         #endregion
 
         #region Helpers de consola
+
+        private void TypeWrite(string text, int delay = 30, bool skippable = false)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (skippable && Console.KeyAvailable)
+                {
+                    Console.ReadKey(true);
+                    Console.Write(text.Substring(i));
+                    break;
+                }
+                Console.Write(text[i]);
+                Thread.Sleep(delay);
+            }
+            Console.WriteLine();
+            Thread.Sleep(skippable ? 0 : 120);
+        }
 
         private void ShowResult(bool ok, string message)
         {
@@ -520,9 +600,7 @@ namespace FarmGame
                 {
                     return value;
                 }
-
-                WriteColor(ConsoleColor.Red,
-                    $"Por favor ingresa un numero entre {min} y {max}.");
+                WriteColor(ConsoleColor.Red, $"Por favor ingresa un numero entre {min} y {max}.");
             }
         }
 

@@ -62,8 +62,8 @@ namespace FarmGame
                 {
                     player.Gold += order.TotalValue;
                     messages.Add(
-                        $"  Cobro recibido: {order.Quantity}x {order.CropName} " +
-                        $"-> +{order.TotalValue}g  (Oro ahora: {player.Gold}g)");
+                        $"Cobro recibido: {order.Quantity}x {order.CropName} " +
+                        $"=> +{order.TotalValue}g  (Oro ahora: {player.Gold}g)");
                     completed.Add(order);
                 }
             }
